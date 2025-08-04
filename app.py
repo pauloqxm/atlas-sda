@@ -1,3 +1,4 @@
+
 import streamlit as st
 import pandas as pd
 import folium
@@ -16,7 +17,7 @@ st.markdown("""
             background-color: #004080;
             color: white;
             text-align: left;
-            padding: 15px 20px;
+            padding: 20px 30px 10px 30px; 
             margin-bottom: 20px;
             display: flex;
             align-items: center;
@@ -587,18 +588,21 @@ st.markdown(
     """
     <div style='text-align: center; 
                 border: 1px solid #004080;
-                padding: 15px; 
+                padding: 30px; 
                 border-radius: 8px;
                 margin-top: 20px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                gap: 10px;'>
-        <span>📞 (88) 99999-9999</span>
-        <span>|</span>
-        <span>📧 contato@quixeramobim.ce.gov.br</span>
-        <span>|</span>
-        <span><b>Atlas da Prefeitura Municipal de Quixeramobim 2025</b></span>
+                font-size: 14px;
+                line-height: 1.6;'>
+        <div style='display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap;'>
+            <span>📞 (88) 99999-9999</span>
+            <span>|</span>
+            <span>📧 contato@quixeramobim.ce.gov.br</span>
+            <span>|</span>
+            <span><b>Atlas da Prefeitura Municipal de Quixeramobim 2025</b></span>
+        </div>
+        <div style='margin-top: 10px;'>
+            🏢 R. Dr. Álvaro Fernandes, 36/42 - Centro, Quixeramobim - CE, 63800-000
+        </div>
     </div>
     """,
     unsafe_allow_html=True
