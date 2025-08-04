@@ -102,6 +102,13 @@ except Exception as e:
     st.stop()
 
 # Sidebar
+
+st.sidebar.markdown("""
+    <div style='text-align: center; margin-bottom: 25px;'>
+        <img src='https://i.ibb.co/jPF2kVzn/brasao.png' width='138' height='100'>
+    </div>
+""", unsafe_allow_html=True)
+
 st.sidebar.title("🗺️ Controle de Camadas")
 
 with st.sidebar.expander("🏘️ Infraestrutura"):
@@ -149,7 +156,7 @@ if produtor:
 
 total = len(df_filtrado)
 st.success(f"{total} registro(s) encontrado(s).")
-st.subheader("🗺️ Mapa do Município")
+st.subheader("🗺️ Mapa com Distritos, Produtores e Áreas de Reforma")
 
 if not df_filtrado.empty:
     # Verificar coordenadas válidas
@@ -574,8 +581,25 @@ st.title("📋 Dados dos Produtores")
 colunas = ["TECNICO", "PRODUTOR", "APELIDO", "FAZENDA", "DISTRITO", "ORDENHA?", "INSEMINA?", "LATICINIO", "COMPRADOR"]
 st.dataframe(df_filtrado[colunas], use_container_width=True)
 
-st.markdown("""
-    <div style='background-color: #d9edf7; padding: 15px; border-radius: 8px; margin-top: 20px; text-align: center;'>
-        <strong>Atlas da Prefeitura Municipal de Quixeramobim 2025</strong>
+# Dados de rodapé
+
+st.markdown(
+    """
+    <div style='text-align: center; 
+                border: 1px solid #004080;
+                padding: 15px; 
+                border-radius: 8px;
+                margin-top: 20px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 10px;'>
+        <span>📞 (88) 99999-9999</span>
+        <span>|</span>
+        <span>📧 contato@quixeramobim.ce.gov.br</span>
+        <span>|</span>
+        <span><b>Atlas da Prefeitura Municipal de Quixeramobim 2025</b></span>
     </div>
-""", unsafe_allow_html=True)
+    """,
+    unsafe_allow_html=True
+)
