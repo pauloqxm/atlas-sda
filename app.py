@@ -12,19 +12,32 @@ st.set_page_config(page_title="ATLAS SDA - Quixeramobim", layout="wide")
 # Estilos personalizados para a sidebar
 st.markdown("""
     <style>
+         html, body, [data-testid="stAppViewContainer"] > .main {
+            padding: 10px !important;
+            margin: 10px !important;   
+        }
+         
+        .block-container {
+            padding-top: 0rem !important;
+        }
+
+         button[title="View fullscreen"] {
+            display: none;
+        }
+        
         .top-header {
             width: 100%;
             background-color: #004080;
             color: white;
             text-align: left;
-            padding: 20px 30px 10px 30px; 
-            margin-bottom: 20px;
-            display: flex;
+            padding: 80px 20px 10px 40px;
+            margin-bottom: 10px;
+            display: Flex;
             align-items: center;
-            gap: 20px;
-            border-bottom: 4px solid #002952;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-            border-radius: 0 0 8px 8px;
+            gap: 12px;
+            border-bottom: 3px solid #002952;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+            border-radius: 0 0 5px 5px;
         }
 
         .top-header img {
