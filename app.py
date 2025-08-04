@@ -149,7 +149,7 @@ if produtor:
 
 total = len(df_filtrado)
 st.success(f"{total} registro(s) encontrado(s).")
-st.subheader("🗺️ Mapa com Distritos, Produtores e Áreas de Reforma")
+st.subheader("🗺️ Mapa do Município")
 
 if not df_filtrado.empty:
     # Verificar coordenadas válidas
