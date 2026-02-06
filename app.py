@@ -250,12 +250,21 @@ st.markdown(f"""
     </div>
 """, unsafe_allow_html=True)
 
-st.markdown("<h2 style='color: #1e3c72; font-weight: 700; margin: 24px 0 16px 0;'>🗺️ Mapa Interativo</h2>", unsafe_allow_html=True)
+# Container do mapa com estilo moderno
+st.markdown("""
+    <div style='background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); margin: 20px 0;'>
+        <h2 style='color: #1e3c72; font-weight: 700; margin: 0 0 16px 0; display: flex; align-items: center; gap: 10px;'>
+            🗺️ Mapa Interativo
+            <span style='font-size: 0.85rem; font-weight: 500; color: #6b7280; background: #f3f4f6; padding: 4px 12px; border-radius: 6px;'>Visualização Geoespacial</span>
+        </h2>
+        <p style='color: #6b7280; font-size: 0.95rem; margin: 0 0 16px 0;'>Explore as camadas de dados geográficos e utilize as ferramentas de medição e desenho</p>
+    </div>
+""", unsafe_allow_html=True)
 
 if not df_filtrado.empty:
     # Verificar coordenadas válidas
     if df_filtrado["LATITUDE"].isnull().any() or df_filtrado["LONGITUDE"].isnull().any():
-        st.warning("Algumas coordenadas são inválidas e serão ignoradas.")
+        st.warning("⚠️ Algumas coordenadas são inválidas e serão ignoradas.")
         df_filtrado = df_filtrado.dropna(subset=["LATITUDE", "LONGITUDE"])
     
     # Calcular os limites do mapa com margem
@@ -263,9 +272,23 @@ if not df_filtrado.empty:
     sw = [df_filtrado["LATITUDE"].min() - padding, df_filtrado["LONGITUDE"].min() - padding]
     ne = [df_filtrado["LATITUDE"].max() + padding, df_filtrado["LONGITUDE"].max() + padding]
     
-    # Criar mapa centralizado
-    m = folium.Map(location=[-5.1971, -39.2886], zoom_start=10, tiles=None)
-    Fullscreen(position='topright', title='Tela Cheia', title_cancel='Sair da Tela Cheia', force_separate_button=True).add_to(m)
+    # Criar mapa centralizado com configurações otimizadas
+    m = folium.Map(
+        location=[-5.1971, -39.2886], 
+        zoom_start=10, 
+        tiles=None,
+        zoom_control=True,
+        scrollWheelZoom=True,
+        dragging=True
+    )
+    # Controles do mapa
+    Fullscreen(
+        position='topright', 
+        title='🖥️ Tela Cheia', 
+        title_cancel='❌ Sair da Tela Cheia', 
+        force_separate_button=True
+    ).add_to(m)
+    
     m.add_child(MeasureControl(
         primary_length_unit="meters",
         secondary_length_unit="kilometers",
@@ -344,10 +367,17 @@ if not df_filtrado.empty:
         for feature in geojson_data["distritos_ponto"]["features"]:
             coords = feature["geometry"]["coordinates"]
             nome_distrito = feature["properties"].get("Name", "Sem nome")
+            popup_html = f"""
+            <div style='font-family: Inter, Arial, sans-serif; border: 2px solid #3d6bb3; border-radius: 10px; padding: 12px; background: white;'>
+                <h4 style='margin: 0; color: #1e3c72; font-weight: 700;'>🏛️ {nome_distrito}</h4>
+                <p style='margin: 8px 0 0 0; color: #6b7280; font-size: 0.9rem;'>Sede Distrital</p>
+            </div>
+            """
             folium.Marker(
                 location=[coords[1], coords[0]],
-                popup=folium.Popup(f"Distrito: {nome_distrito}", max_width=200),
-                icon=folium.CustomIcon("https://i.ibb.co/S4VmxQcB/circle.png", icon_size=(23, 23))
+                popup=folium.Popup(popup_html, max_width=250),
+                tooltip=f"<strong>{nome_distrito}</strong>",
+                icon=folium.CustomIcon("https://i.ibb.co/S4VmxQcB/circle.png", icon_size=(25, 25))
             ).add_to(distritos_ponto_layer)
         distritos_ponto_layer.add_to(m)
         
@@ -359,20 +389,25 @@ if not df_filtrado.empty:
         ).add_to(m)
 
     if show_produtores:
+        produtores_layer = folium.FeatureGroup(name="Produtores")
         for _, row in df_filtrado.iterrows():
             popup_info = f"""
-            <strong>Apelido:</strong> {row['APELIDO']}<br>
-            <strong>Produção dia:</strong> {row['PRODUCAO']}<br>
-            <strong>Fazenda:</strong> {row['FAZENDA']}<br>
-            <strong>Distrito:</strong> {row['DISTRITO']}<br>
-            <strong>Escolaridade:</strong> {row['ESCOLARIDADE']}<br>
+            <div style='font-family: Inter, Arial, sans-serif; border: 2px solid #2a5298; border-radius: 10px; padding: 12px; background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%); min-width: 250px;'>
+                <h4 style='margin: 0 0 12px 0; color: #1e3c72; border-bottom: 2px solid #2a5298; padding-bottom: 8px; font-weight: 700;'>🧑‍🌾 {row['PRODUTOR']}</h4>
+                <p style='margin: 6px 0; color: #374151;'><strong style='color: #2a5298;'>📛 Apelido:</strong> {row['APELIDO']}</p>
+                <p style='margin: 6px 0; color: #374151;'><strong style='color: #2a5298;'>📊 Produção/dia:</strong> {row['PRODUCAO']}</p>
+                <p style='margin: 6px 0; color: #374151;'><strong style='color: #2a5298;'>🏡 Fazenda:</strong> {row['FAZENDA']}</p>
+                <p style='margin: 6px 0; color: #374151;'><strong style='color: #2a5298;'>📍 Distrito:</strong> {row['DISTRITO']}</p>
+                <p style='margin: 6px 0; color: #374151;'><strong style='color: #2a5298;'>🎓 Escolaridade:</strong> {row['ESCOLARIDADE']}</p>
+            </div>
             """
             folium.Marker(
                 location=[row["LATITUDE"], row["LONGITUDE"]],
-                icon=folium.CustomIcon("https://i.ibb.co/zVBVzh2t/fazenda.png", icon_size=(20, 20)),
-                popup=folium.Popup(popup_info, max_width=300),
-                tooltip=row["PRODUTOR"]
-            ).add_to(m)
+                icon=folium.CustomIcon("https://i.ibb.co/zVBVzh2t/fazenda.png", icon_size=(22, 22)),
+                popup=folium.Popup(popup_info, max_width=320),
+                tooltip=f"<strong>{row['PRODUTOR']}</strong>"
+            ).add_to(produtores_layer)
+        produtores_layer.add_to(m)
 
     if show_apicultura and geojson_data.get("apicultura"):
         apicultura_layer = folium.FeatureGroup(name="Apicultura")
@@ -612,24 +647,67 @@ if not df_filtrado.empty:
             ).add_to(outorgas_layer)
         outorgas_layer.add_to(m)
  
-    folium.LayerControl(collapsed=True).add_to(m)
-    MousePosition().add_to(m)
+    # Controle de camadas aprimorado
+    folium.LayerControl(
+        collapsed=False,
+        position='topright'
+    ).add_to(m)
+    
+    # Posição do mouse
+    MousePosition(
+        position='bottomleft',
+        separator=' | ',
+        prefix='Coordenadas:',
+        lat_formatter="function(num) {return L.Util.formatNum(num, 5) + ' °N';}",
+        lng_formatter="function(num) {return L.Util.formatNum(num, 5) + ' °E';}"
+    ).add_to(m)
+    
+    # Ferramentas de desenho
     Draw(
-    export=True,
-    draw_options={
-        "polyline": True,
-        "polygon": {"allowIntersection": False, "showArea": True},
-        "rectangle": {"showArea": True},
-        "circle": {"showArea": True},
-        "circlemarker": False
-    },
-    edit_options={"edit": True, "remove": True}
-).add_to(m)
+        export=True,
+        draw_options={
+            "polyline": {"shapeOptions": {"color": "#2a5298", "weight": 3}},
+            "polygon": {"allowIntersection": False, "showArea": True, "shapeOptions": {"color": "#2a5298"}},
+            "rectangle": {"showArea": True, "shapeOptions": {"color": "#2a5298"}},
+            "circle": {"showArea": True, "shapeOptions": {"color": "#2a5298"}},
+            "circlemarker": False,
+            "marker": True
+        },
+        edit_options={"edit": True, "remove": True}
+    ).add_to(m)
         
     if show_comunidades and geojson_data.get("comunidades"):
-        Search(layer=comunidades_layer, search_label="Name", placeholder="🔍 Buscar comunidade").add_to(m)
+        Search(
+            layer=comunidades_layer, 
+            search_label="Name", 
+            placeholder="🔍 Buscar comunidade...",
+            collapsed=True
+        ).add_to(m)
 
-    folium_static(m, width=1200, height=700)
+    # Container do mapa com borda estilizada
+    st.markdown("""
+        <div style='border-radius: 12px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.12); border: 2px solid #e5e7eb;'>
+    """, unsafe_allow_html=True)
+    
+    folium_static(m, width=1400, height=750)
+    
+    st.markdown("</div>", unsafe_allow_html=True)
+    
+    # Legenda informativa
+    st.markdown("""
+        <div style='background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); 
+                    padding: 16px; 
+                    border-radius: 10px; 
+                    margin-top: 16px;
+                    border-left: 4px solid #2a5298;'>
+            <p style='margin: 0; color: #374151; font-size: 0.9rem;'>
+                <strong style='color: #1e3c72;'>💡 Dica:</strong> 
+                Use o controle de camadas no canto superior direito para alternar visualizações. 
+                Clique nos marcadores para ver detalhes. 
+                Utilize as ferramentas de desenho para medir distâncias e áreas.
+            </p>
+        </div>
+    """, unsafe_allow_html=True)
     st.components.v1.html('''
 <script>
     function areaInHectares(areaInSqMeters) {
@@ -668,7 +746,17 @@ if not df_filtrado.empty:
 
 
 else:
-    st.info("Nenhum produtor encontrado com os filtros selecionados.")
+    st.markdown("""
+        <div style='background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); 
+                    color: white; 
+                    padding: 24px; 
+                    border-radius: 10px; 
+                    text-align: center;
+                    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);'>
+            <h3 style='margin: 0 0 8px 0; font-weight: 600;'>ℹ️ Nenhum Registro Encontrado</h3>
+            <p style='margin: 0; opacity: 0.95;'>Ajuste os filtros na barra lateral para visualizar os dados no mapa</p>
+        </div>
+    """, unsafe_allow_html=True)
 
 st.markdown("<h2 style='color: #1e3c72; font-weight: 700; margin: 32px 0 16px 0;'>📋 Dados dos Produtores</h2>", unsafe_allow_html=True)
 colunas = ["TECNICO", "PRODUTOR", "APELIDO", "FAZENDA", "DISTRITO", "ORDENHA?", "INSEMINA?", "LATICINIO", "COMPRADOR"]
