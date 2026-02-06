@@ -299,61 +299,20 @@ if not df_filtrado.empty:
       
     # Adicionar camadas de fundo
     tile_layers = [
-        {
-            "name": "Top Map",
-            "url": "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
-            "attr": "Map tiles by Stamen Design, under CC BY 3.0. Data by OpenStreetMap, under ODbL."
-        },
-        {
-            "name": "Sentinel-2 (sem nuvem)",
-            "url": "https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2021_3857/default/g/{z}/{y}/{x}.jpg",
-            "attr": "Sentinel-2 cloudless by EOX"
-        },
-        {
-            "name": "Google Satellite",
-            "url": "https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}",
-            "attr": "Google Satellite imagery"
-        },
-        {
-            "name": "Google Streets",
-            "url": "https://mt1.google.com/vt/lyrs=r&x={x}&y={y}&z={z}",
-            "attr": "Google Streets imagery"
-        },
-        {
-            "name": "CartoDB Positron",
-            "url": "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
-            "attr": "© OpenStreetMap contributors, © CARTO"
-        },
-        {
-            "name": "CartoDB Dark Matter",
-            "url": "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
-            "attr": "© OpenStreetMap contributors, © CARTO"
-        },
-        {
-            "name": "Esri Satellite",
-            "url": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-            "attr": "Tiles © Esri — Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, etc."
-        },
-        {
-            "name": "Google Terrain",
-            "url": "https://mt1.google.com/vt/lyrs=p&x={x}&y={y}&z={z}",
-            "attr": "Google Terrain imagery"
-        },
-        {
-            "name": "Open Street Map",
-            "url": "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-            "attr": "© OpenStreetMap contributors"
-        },
+        {"name": "Google Satellite", "url": "https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}", "attr": "Google"},
+        {"name": "Google Streets", "url": "https://mt1.google.com/vt/lyrs=r&x={x}&y={y}&z={z}", "attr": "Google"},
+        {"name": "OpenStreetMap", "url": "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", "attr": "OSM"},
+        {"name": "CartoDB Positron", "url": "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", "attr": "CARTO"},
+        {"name": "Esri Satellite", "url": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", "attr": "Esri"},
     ]
 
-    # Adicionar todas as camadas base primeiro
-    for layer in tile_layers:
+    for i, layer in enumerate(tile_layers):
         folium.TileLayer(
             tiles=layer["url"],
             attr=layer["attr"],
             name=layer["name"],
             overlay=False,
-            control=True
+            show=True if i == 0 else False
         ).add_to(m)
 
     # CAMADAS INFRAESTRUTURA
@@ -651,11 +610,7 @@ if not df_filtrado.empty:
         outorgas_layer.add_to(m)
  
     # IMPORTANTE: Adicionar LayerControl APÓS todas as camadas
-    folium.LayerControl(
-        collapsed=False,
-        position='topright',
-        autoZIndex=True
-    ).add_to(m)
+    folium.LayerControl(position='topright').add_to(m)
     
     # Posição do mouse
     MousePosition(
