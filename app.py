@@ -75,38 +75,28 @@ st.markdown("""
         }
         
         section[data-testid="stSidebar"] {
-            background: linear-gradient(180deg, #2d3748 0%, #1a202c 100%);
-            box-shadow: 2px 0 12px rgba(0,0,0,0.15);
+            background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
+            box-shadow: 2px 0 12px rgba(0,0,0,0.08);
         }
         
         section[data-testid="stSidebar"] > div {
             background: transparent;
         }
-        
-        section[data-testid="stSidebar"] * {
-            color: white !important;
-        }
-        
-        section[data-testid="stSidebar"] .stMarkdown {
-            color: white !important;
-        }
 
         section[data-testid="stSidebar"] details summary {
-            background: rgba(255, 255, 255, 0.15) !important;
+            background: linear-gradient(135deg, #2a5298 0%, #1e3c72 100%) !important;
             color: white !important;
             font-weight: 600 !important;
             border-radius: 8px !important;
             padding: 12px 16px !important;
             margin: 8px 0 !important;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+            box-shadow: 0 4px 12px rgba(42, 82, 152, 0.3) !important;
             transition: all 0.3s ease !important;
-            backdrop-filter: blur(10px) !important;
         }
         
         section[data-testid="stSidebar"] details summary:hover {
-            background: rgba(255, 255, 255, 0.25) !important;
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+            box-shadow: 0 6px 16px rgba(42, 82, 152, 0.4) !important;
         }
         
         .stButton > button {
@@ -195,13 +185,13 @@ except Exception as e:
 # Sidebar
 
 st.sidebar.markdown("""
-    <div style='text-align: center; margin-bottom: 30px; padding: 20px; background: rgba(255, 255, 255, 0.08); border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1);'>
-        <img src='https://i.ibb.co/jPF2kVzn/brasao.png' width='120' height='90' style='filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));'>
-        <h3 style='color: white; margin-top: 12px; font-weight: 700; font-size: 1.2rem; text-shadow: 0 2px 4px rgba(0,0,0,0.3);'>ATLAS SDA</h3>
+    <div style='text-align: center; margin-bottom: 30px; padding: 20px; background: linear-gradient(135deg, #2a5298 0%, #1e3c72 100%); border-radius: 12px; box-shadow: 0 4px 12px rgba(42, 82, 152, 0.3);'>
+        <img src='https://i.ibb.co/jPF2kVzn/brasao.png' width='120' height='90' style='filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));'>
+        <h3 style='color: white; margin-top: 12px; font-weight: 600; font-size: 1.1rem;'>ATLAS SDA</h3>
     </div>
 """, unsafe_allow_html=True)
 
-st.sidebar.markdown("<h3 style='color: white; font-weight: 700; margin-bottom: 16px; text-shadow: 0 2px 4px rgba(0,0,0,0.2);'>🗺️ Controle de Camadas</h3>", unsafe_allow_html=True)
+st.sidebar.markdown("<h3 style='color: #1e3c72; font-weight: 700; margin-bottom: 16px;'>🗺️ Controle de Camadas</h3>", unsafe_allow_html=True)
 
 with st.sidebar.expander("🏘️ Infraestrutura"):
     show_distritos = st.checkbox("Distritos", value=True)
@@ -224,7 +214,7 @@ with st.sidebar.expander("💧 Recursos Hídricos"):
     show_outorgas = st.checkbox("Outorgas", value=False)
     show_acudes = st.checkbox("Açudes", value=False)
 
-st.sidebar.markdown("<h3 style='color: white; font-weight: 700; margin: 24px 0 16px 0; text-shadow: 0 2px 4px rgba(0,0,0,0.2);'>🔎 Filtros</h3>", unsafe_allow_html=True)
+st.sidebar.markdown("<h3 style='color: #1e3c72; font-weight: 700; margin: 24px 0 16px 0;'>🔎 Filtros</h3>", unsafe_allow_html=True)
 
 if st.sidebar.button("🔄 Reiniciar Filtros"):
     st.session_state.clear()
