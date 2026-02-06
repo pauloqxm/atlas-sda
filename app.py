@@ -346,11 +346,14 @@ if not df_filtrado.empty:
         },
     ]
 
+    # Adicionar todas as camadas base primeiro
     for layer in tile_layers:
         folium.TileLayer(
             tiles=layer["url"],
             attr=layer["attr"],
-            name=layer["name"]
+            name=layer["name"],
+            overlay=False,
+            control=True
         ).add_to(m)
 
     # CAMADAS INFRAESTRUTURA
@@ -647,10 +650,11 @@ if not df_filtrado.empty:
             ).add_to(outorgas_layer)
         outorgas_layer.add_to(m)
  
-    # Controle de camadas aprimorado
+    # IMPORTANTE: Adicionar LayerControl APÓS todas as camadas
     folium.LayerControl(
         collapsed=False,
-        position='topright'
+        position='topright',
+        autoZIndex=True
     ).add_to(m)
     
     # Posição do mouse
