@@ -7,67 +7,134 @@ from folium.plugins import MeasureControl, Fullscreen
 from folium.plugins import Draw, Search, MousePosition
 import json
 
-st.set_page_config(page_title="ATLAS SDA - Quixeramobim", layout="wide")
+st.set_page_config(page_title="ATLAS SDA - Quixeramobim", layout="wide", page_icon="🗺️")
 
-# Estilos personalizados para a sidebar
 st.markdown("""
     <style>
-         html, body, [data-testid="stAppViewContainer"] > .main {
-            padding: 10px !important;
-            margin: 10px !important;   
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        html, body, [data-testid="stAppViewContainer"] > .main {
+            padding: 8px !important;
+            margin: 0 !important;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
         }
          
         .block-container {
             padding-top: 0rem !important;
+            max-width: 100% !important;
         }
 
-         button[title="View fullscreen"] {
+        button[title="View fullscreen"] {
             display: none;
         }
         
         .top-header {
             width: 100%;
-            background-color: #004080;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #3d6bb3 100%);
             color: white;
             text-align: left;
-            padding: 80px 20px 10px 40px;
-            margin-bottom: 10px;
-            display: Flex;
+            padding: 25px 40px;
+            margin-bottom: 20px;
+            display: flex;
             align-items: center;
-            gap: 12px;
-            border-bottom: 3px solid #002952;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
-            border-radius: 0 0 5px 5px;
+            gap: 20px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(30, 60, 114, 0.25);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .top-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, transparent 100%);
+            pointer-events: none;
         }
 
         .top-header img {
-            height: 90px;
+            height: 85px;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+            z-index: 1;
         }
 
         .top-header h2 {
             margin: 0;
-            font-size: 1.7rem;
+            font-size: 1.8rem;
+            font-weight: 700;
             color: #ffffff;
+            letter-spacing: 0.5px;
+            z-index: 1;
+        }
+        
+        section[data-testid="stSidebar"] {
+            background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
+            box-shadow: 2px 0 12px rgba(0,0,0,0.08);
+        }
+        
+        section[data-testid="stSidebar"] > div {
+            background: transparent;
         }
 
-        section[data-testid="stSidebar"] details:nth-of-type(1) summary {
-            background-color: #003366 !important;
+        section[data-testid="stSidebar"] details summary {
+            background: linear-gradient(135deg, #2a5298 0%, #1e3c72 100%) !important;
             color: white !important;
-            font-weight: bold;
-            border-radius: 5px;
+            font-weight: 600 !important;
+            border-radius: 8px !important;
+            padding: 12px 16px !important;
+            margin: 8px 0 !important;
+            box-shadow: 0 4px 12px rgba(42, 82, 152, 0.3) !important;
+            transition: all 0.3s ease !important;
         }
-
-        section[data-testid="stSidebar"] details:nth-of-type(2) summary {
-            background-color: #0059b3 !important;
-            color: white !important;
-            font-weight: bold;
-            border-radius: 5px;
+        
+        section[data-testid="stSidebar"] details summary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(42, 82, 152, 0.4) !important;
+        }
+        
+        .stButton > button {
+            background: linear-gradient(135deg, #2a5298 0%, #1e3c72 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 24px;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(42, 82, 152, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .stButton > button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(42, 82, 152, 0.4);
+        }
+        
+        div[data-testid="stDataFrame"] {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+        }
+        
+        .element-container div[data-testid="stMarkdownContainer"] > div[data-testid="stMarkdown"] {
+            background: white;
+            padding: 16px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
         }
     </style>
 
     <div class='top-header'>
         <img src="https://i.ibb.co/jPF2kVzn/brasao.png" alt="Brasão">
-        <h2>BASE DE DADOS ESPACIAIS</h2>
+        <div>
+            <h2>🗺️ ATLAS SDA - BASE DE DADOS ESPACIAIS</h2>
+            <p style='margin: 5px 0 0 0; font-size: 0.95rem; opacity: 0.9; font-weight: 400;'>Sistema de Informações Geográficas - Quixeramobim/CE</p>
+        </div>
     </div>
 """, unsafe_allow_html=True)
 
@@ -118,12 +185,13 @@ except Exception as e:
 # Sidebar
 
 st.sidebar.markdown("""
-    <div style='text-align: center; margin-bottom: 25px;'>
-        <img src='https://i.ibb.co/jPF2kVzn/brasao.png' width='138' height='100'>
+    <div style='text-align: center; margin-bottom: 30px; padding: 20px; background: linear-gradient(135deg, #2a5298 0%, #1e3c72 100%); border-radius: 12px; box-shadow: 0 4px 12px rgba(42, 82, 152, 0.3);'>
+        <img src='https://i.ibb.co/jPF2kVzn/brasao.png' width='120' height='90' style='filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));'>
+        <h3 style='color: white; margin-top: 12px; font-weight: 600; font-size: 1.1rem;'>ATLAS SDA</h3>
     </div>
 """, unsafe_allow_html=True)
 
-st.sidebar.title("🗺️ Controle de Camadas")
+st.sidebar.markdown("<h3 style='color: #1e3c72; font-weight: 700; margin-bottom: 16px;'>🗺️ Controle de Camadas</h3>", unsafe_allow_html=True)
 
 with st.sidebar.expander("🏘️ Infraestrutura"):
     show_distritos = st.checkbox("Distritos", value=True)
@@ -146,7 +214,7 @@ with st.sidebar.expander("💧 Recursos Hídricos"):
     show_outorgas = st.checkbox("Outorgas", value=False)
     show_acudes = st.checkbox("Açudes", value=False)
 
-st.sidebar.title("🔎 Filtros")
+st.sidebar.markdown("<h3 style='color: #1e3c72; font-weight: 700; margin: 24px 0 16px 0;'>🔎 Filtros</h3>", unsafe_allow_html=True)
 
 if st.sidebar.button("🔄 Reiniciar Filtros"):
     st.session_state.clear()
@@ -169,8 +237,20 @@ if produtor:
     df_filtrado = df_filtrado[df_filtrado["PRODUTOR"].str.contains(produtor, case=False, na=False)]
 
 total = len(df_filtrado)
-st.success(f"{total} registro(s) encontrado(s).")
-st.subheader("🗺️ Mapa com Distritos, Produtores e Áreas de Reforma")
+st.markdown(f"""
+    <div style='background: linear-gradient(135deg, #10b981 0%, #059669 100%); 
+                color: white; 
+                padding: 16px 24px; 
+                border-radius: 10px; 
+                margin: 20px 0;
+                box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+                font-weight: 600;
+                font-size: 1.05rem;'>
+        ✅ {total} registro(s) encontrado(s)
+    </div>
+""", unsafe_allow_html=True)
+
+st.markdown("<h2 style='color: #1e3c72; font-weight: 700; margin: 24px 0 16px 0;'>🗺️ Mapa Interativo</h2>", unsafe_allow_html=True)
 
 if not df_filtrado.empty:
     # Verificar coordenadas válidas
@@ -590,8 +670,7 @@ if not df_filtrado.empty:
 else:
     st.info("Nenhum produtor encontrado com os filtros selecionados.")
 
-# Tabela final
-st.title("📋 Dados dos Produtores")
+st.markdown("<h2 style='color: #1e3c72; font-weight: 700; margin: 32px 0 16px 0;'>📋 Dados dos Produtores</h2>", unsafe_allow_html=True)
 colunas = ["TECNICO", "PRODUTOR", "APELIDO", "FAZENDA", "DISTRITO", "ORDENHA?", "INSEMINA?", "LATICINIO", "COMPRADOR"]
 st.dataframe(df_filtrado[colunas], use_container_width=True)
 
@@ -600,21 +679,26 @@ st.dataframe(df_filtrado[colunas], use_container_width=True)
 st.markdown(
     """
     <div style='text-align: center; 
-                border: 1px solid #004080;
-                padding: 30px; 
-                border-radius: 8px;
-                margin-top: 20px;
+                background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+                color: white;
+                padding: 32px; 
+                border-radius: 12px;
+                margin-top: 32px;
                 font-size: 14px;
-                line-height: 1.6;'>
-        <div style='display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap;'>
+                line-height: 1.8;
+                box-shadow: 0 8px 24px rgba(30, 60, 114, 0.25);'>
+        <div style='display: flex; justify-content: center; align-items: center; gap: 16px; flex-wrap: wrap; font-weight: 500;'>
             <span>📞 (88) 99999-9999</span>
-            <span>|</span>
+            <span style='opacity: 0.6;'>|</span>
             <span>📧 contato@quixeramobim.ce.gov.br</span>
-            <span>|</span>
-            <span><b>Atlas da Prefeitura Municipal de Quixeramobim 2025</b></span>
+            <span style='opacity: 0.6;'>|</span>
+            <span style='font-weight: 700;'>Atlas SDA 2025</span>
         </div>
-        <div style='margin-top: 10px;'>
+        <div style='margin-top: 12px; opacity: 0.95;'>
             🏢 R. Dr. Álvaro Fernandes, 36/42 - Centro, Quixeramobim - CE, 63800-000
+        </div>
+        <div style='margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.2); font-size: 12px; opacity: 0.8;'>
+            Prefeitura Municipal de Quixeramobim - Secretaria de Desenvolvimento Agrário
         </div>
     </div>
     """,
