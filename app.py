@@ -612,76 +612,49 @@ if not df_filtrado.empty:
     # IMPORTANTE: Adicionar LayerControl APÓS todas as camadas
     folium.LayerControl(position='topright').add_to(m)
     
-    # CSS customizado para modernizar o controle de camadas
-    custom_css = """
+    # Injetar CSS moderno no mapa
+    map_css = """
     <style>
         .leaflet-control-layers {
             background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%) !important;
             border: none !important;
             border-radius: 12px !important;
             box-shadow: 0 4px 16px rgba(0,0,0,0.15) !important;
-            padding: 8px !important;
         }
-        
         .leaflet-control-layers-toggle {
+            background-image: none !important;
             background: linear-gradient(135deg, #2a5298 0%, #1e3c72 100%) !important;
             width: 44px !important;
             height: 44px !important;
             border-radius: 10px !important;
-            background-size: 24px 24px !important;
             box-shadow: 0 4px 12px rgba(42, 82, 152, 0.4) !important;
-            transition: all 0.3s ease !important;
         }
-        
-        .leaflet-control-layers-toggle:hover {
-            transform: scale(1.05) !important;
-            box-shadow: 0 6px 16px rgba(42, 82, 152, 0.5) !important;
+        .leaflet-control-layers-toggle::before {
+            content: '\2630' !important;
+            color: white !important;
+            font-size: 20px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            height: 100% !important;
         }
-        
         .leaflet-control-layers-expanded {
             padding: 16px !important;
             border-radius: 12px !important;
-            min-width: 220px !important;
         }
-        
-        .leaflet-control-layers-list {
-            font-family: 'Inter', sans-serif !important;
-        }
-        
         .leaflet-control-layers-base label,
         .leaflet-control-layers-overlays label {
-            padding: 8px 4px !important;
-            font-size: 14px !important;
+            padding: 6px !important;
             font-weight: 500 !important;
-            color: #374151 !important;
-            transition: all 0.2s ease !important;
             border-radius: 6px !important;
-            margin: 2px 0 !important;
-            display: flex !important;
-            align-items: center !important;
         }
-        
         .leaflet-control-layers-base label:hover,
         .leaflet-control-layers-overlays label:hover {
             background: #f3f4f6 !important;
-            color: #1e3c72 !important;
-        }
-        
-        .leaflet-control-layers-separator {
-            border-top: 2px solid #e5e7eb !important;
-            margin: 8px 0 !important;
-        }
-        
-        .leaflet-control-layers input[type="radio"],
-        .leaflet-control-layers input[type="checkbox"] {
-            margin-right: 8px !important;
-            width: 18px !important;
-            height: 18px !important;
-            cursor: pointer !important;
         }
     </style>
     """
-    m.get_root().html.add_child(folium.Element(custom_css))
+    m.get_root().header.add_child(folium.Element(map_css))
     
     # Posição do mouse
     MousePosition(
