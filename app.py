@@ -75,8 +75,8 @@ st.markdown("""
         }
         
         section[data-testid="stSidebar"] {
-            background: linear-gradient(180deg, #1e3c72 0%, #2a5298 100%);
-            box-shadow: 2px 0 12px rgba(0,0,0,0.08);
+            background: linear-gradient(180deg, #2d3748 0%, #1a202c 100%);
+            box-shadow: 2px 0 12px rgba(0,0,0,0.15);
         }
         
         section[data-testid="stSidebar"] > div {
@@ -195,9 +195,9 @@ except Exception as e:
 # Sidebar
 
 st.sidebar.markdown("""
-    <div style='text-align: center; margin-bottom: 30px; padding: 20px; background: rgba(255, 255, 255, 0.1); border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); backdrop-filter: blur(10px);'>
-        <img src='https://i.ibb.co/jPF2kVzn/brasao.png' width='120' height='90' style='filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));'>
-        <h3 style='color: white; margin-top: 12px; font-weight: 700; font-size: 1.2rem; text-shadow: 0 2px 4px rgba(0,0,0,0.2);'>ATLAS SDA</h3>
+    <div style='text-align: center; margin-bottom: 30px; padding: 20px; background: rgba(255, 255, 255, 0.08); border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1);'>
+        <img src='https://i.ibb.co/jPF2kVzn/brasao.png' width='120' height='90' style='filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));'>
+        <h3 style='color: white; margin-top: 12px; font-weight: 700; font-size: 1.2rem; text-shadow: 0 2px 4px rgba(0,0,0,0.3);'>ATLAS SDA</h3>
     </div>
 """, unsafe_allow_html=True)
 
